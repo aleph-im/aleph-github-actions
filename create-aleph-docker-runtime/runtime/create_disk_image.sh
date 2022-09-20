@@ -90,6 +90,8 @@ rm -fr ./rootfs/usr/share/doc
 rm -fr ./rootfs/usr/share/man
 rm -fr ./rootfs/var/lib/apt/lists/
 
+ls -lah
+
 # Custom init
 cp ./init0.sh ./rootfs/sbin/init
 cp ./init1.py ./rootfs/root/init1.py
