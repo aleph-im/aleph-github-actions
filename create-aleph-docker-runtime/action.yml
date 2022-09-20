@@ -2,15 +2,15 @@
 name: 'Create Aleph Docker Runtime'
 description: 'Create Aleph Docker Runtime implementing some images'
 inputs:
-  docker-lib-path:
+  docker_lib_path:
     description: 'Path to find the /var/lib/docker files to create the root filesystem'
     required: false
     default: '/tmp/'
-  file-name:
+  file_name:
     description: 'File name of /var/lib/docker tar file'
     required: false
     default: 'aleph-framework-var-lib-docker.tar.gz'
-  output-path:
+  output_path:
     description: 'Path to save the runtime filesystem'
     required: false
     default: '/tmp/rootfs.squashfs'
@@ -18,6 +18,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.docker-lib-path }}
-    - ${{ inputs.file-name }}
-    - ${{ inputs.output-path }}
+    - ${{ inputs.docker_lib_path }}
+    - ${{ inputs.file_name }}
+    - ${{ inputs.output_path }}

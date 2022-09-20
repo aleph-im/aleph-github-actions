@@ -1,9 +1,10 @@
 FROM debian:stable
 
-ARG DOCKER-LIB-PATH
-ARG FILE-NAME
+ARG DOCKER_LIB_PATH
+ARG FILE_NAME
+ENV OUTPUT_PATH=/tmp/rootfs.squashfs
 
-ENV FILE-NAME=$FILE-NAME
+ENV FILE_NAME=$FILE_NAME
 
 WORKDIR /app
 
@@ -11,7 +12,7 @@ RUN apt-get update
 
 RUN apt-get install -y build-essential zlib1g-dev libncurses5-dev \
     libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev curl libbz2-dev \
-    debootstrap squashfs-tools
+    debootstrap squashfs-tools fakeroot fakechroot
 
 # Install Python3
 RUN apt-get install -y python3 python3-pip
@@ -23,7 +24,7 @@ COPY runtime /app/runtime
 
 WORKDIR /app/runtime
 
-COPY $DOCKER-LIB-PATH/$FILE-NAME /app/runtime/$FILE-NAME
+COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 
