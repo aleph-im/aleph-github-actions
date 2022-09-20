@@ -92,6 +92,8 @@ rm -fr ./rootfs/var/lib/apt/lists/
 
 ls -lah
 
+pwd
+
 # Custom init
 cp ./init0.sh ./rootfs/sbin/init
 cp ./init1.py ./rootfs/root/init1.py
