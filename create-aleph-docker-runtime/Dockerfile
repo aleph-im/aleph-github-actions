@@ -1,9 +1,9 @@
 FROM debian:stable
 
-ARG DOCKER_LIB_PATH
-ARG FILE_NAME
+ARG DOCKER-LIB-PATH
+ARG FILE-NAME
 
-ENV FILE_NAME=$FILE_NAME
+ENV FILE-NAME=$FILE-NAME
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ COPY runtime /app/runtime
 
 WORKDIR /app/runtime
 
-COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
+COPY $DOCKER-LIB-PATH/$FILE-NAME /app/runtime/$FILE-NAME
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 

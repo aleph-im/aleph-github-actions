@@ -96,9 +96,9 @@ cp ./init1.py ./rootfs/root/init1.py
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
 
-tar xvzf ./$FILE_NAME -C ./rootfs/
+tar xvzf ./$FILE-NAME -C ./rootfs/
 
 cp docker-compose.yml ./rootfs/opt/docker-compose.yml
 
-mksquashfs ./rootfs/ $OUT_PATH
+mksquashfs ./rootfs/ $OUTPUT-PATH
 
