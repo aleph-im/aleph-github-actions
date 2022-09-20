@@ -27,6 +27,4 @@ COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 
-RUN mkdir /tmp
-
 ENTRYPOINT ["/app/runtime/create_disk_image.sh"]
