@@ -1,5 +1,10 @@
 FROM debian:stable
 
+ARG DOCKER_LIB_PATH
+ARG FILE_NAME
+
+ENV FILE_NAME=$FILE_NAME
+
 WORKDIR /app
 
 RUN apt-get update
@@ -14,8 +19,14 @@ RUN apt-get install -y python3 python3-pip
 COPY entrypoint.sh /app/entrypoint.sh
 
 # Copy runtime files (TODO: add feature to get the last runtime version from git)
-COPY runtime /app/runtime/
+COPY runtime /app/runtime
+
+WORKDIR /app/runtime
+
+COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+MKDIR /tmp
+
+ENTRYPOINT ["/app/runtime/create_disk_image.sh"]
