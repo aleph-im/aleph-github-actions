@@ -1,0 +1,42 @@
+version: '2'
+
+services:
+  framework:
+    image: aleph-framework:latest
+    container_name: framework-fetcher-parser
+    volumes:
+      - ~/indexer.data:/app/data:rw
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - "8081:8081"
+    environment:
+      - INDEXER=framework
+      - INDEXER_FRAMEWORK_API_PORT=8081
+      - INDEXER_FRAMEWORK_SERVICES=fetcher parser
+      - INDEXER_FRAMEWORK_INSTANCES=1
+      - INDEXER_FRAMEWORK_NAMESPACE=global
+      - INDEXER_FRAMEWORK_TRANSPORT=LocalNet
+
+    network_mode: host
+
+  port-indexer:
+    image: aleph-framework:latest
+    volumes:
+      - ~/indexer.data:/app/data:rw
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - INDEXER=${INDEXER:-spl-lending}
+      - LENDING_ID=${LENDING_ID:-port}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST:-port.api.aleph.cloud}
+      - VIRTUAL_HOST=${VIRTUAL_HOST:-port.api.aleph.cloud}
+      - VIRTUAL_PORT=${VIRTUAL_PORT:-8080}
+      - SOLANA_RPC=${SOLANA_RPC:-http://solrpc1.aleph.cloud:7725/}
+      # - INDEXER_TCP_PORT=7900
+      # ports:
+      #   - 7900:7900
+      #   - 7901:7901
+    network_mode: host

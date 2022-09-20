@@ -1,0 +1,18 @@
+# action.yml
+name: 'Create Aleph Docker Runtime'
+description: 'Create Aleph Docker Runtime implementing some images'
+inputs:
+  var-lib-docker-path:
+    description: 'Path to find the /var/lib/docker files to create the root filesystem'
+    required: false
+    default: '/tmp/aleph-framework-var-lib-docker.tar.gz'
+  image-name:
+    description: 'Docker image name to use in docker-compose'
+    required: false
+    default: 'aleph-framework:latest'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.var-lib-docker-path }}
+    - ${{ inputs.image-name }}
