@@ -100,9 +100,9 @@ cp /app/runtime/init1.py ./rootfs/root/init1.py
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
 
-tar xvzf /tmp/$FILE_NAME -C ./rootfs/
+tar xvzf /tmp/aleph-framework-var-lib-docker.tar.gz -C ./rootfs/
 
 cp /app/runtime/docker-compose.yml ./rootfs/opt/docker-compose.yml
 
-mksquashfs ./rootfs/ $OUTPUT_PATH
+mksquashfs ./rootfs/ /tmp/rootfs.squashfs
 
