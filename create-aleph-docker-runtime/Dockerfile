@@ -25,4 +25,6 @@ COPY runtime /app/runtime
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 
+VOLUME /tmp
+
 ENTRYPOINT ["/app/runtime/create_disk_image.sh"]
