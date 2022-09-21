@@ -20,7 +20,8 @@ COPY entrypoint.sh /app/entrypoint.sh
 # Copy runtime files (TODO: add feature to get the last runtime version from git)
 COPY runtime /app/runtime
 
-COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
+# Run this copy instruction on GitHub action when the image is build before download the artifact don't have sense
+#COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 

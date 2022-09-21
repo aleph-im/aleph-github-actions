@@ -100,7 +100,7 @@ cp /app/runtime/init1.py ./rootfs/root/init1.py
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
 
-tar xvzf ./$FILE_NAME -C ./rootfs/
+tar xvzf /tmp/$FILE_NAME -C ./rootfs/
 
 cp /app/runtime/docker-compose.yml ./rootfs/opt/docker-compose.yml
 
