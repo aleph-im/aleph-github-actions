@@ -6,8 +6,6 @@ ENV OUTPUT_PATH=/tmp/rootfs.squashfs
 
 ENV FILE_NAME=$FILE_NAME
 
-WORKDIR /app
-
 RUN apt-get update
 
 RUN apt-get install -y build-essential zlib1g-dev libncurses5-dev \
@@ -22,10 +20,8 @@ COPY entrypoint.sh /app/entrypoint.sh
 # Copy runtime files (TODO: add feature to get the last runtime version from git)
 COPY runtime /app/runtime
 
-WORKDIR /app/runtime
-
 COPY $DOCKER_LIB_PATH/$FILE_NAME /app/runtime/$FILE_NAME
 
 RUN chmod +x /app/runtime/create_disk_image.sh
 
-ENTRYPOINT ["./create_disk_image.sh"]
+ENTRYPOINT ["/app/runtime/create_disk_image.sh"]

@@ -95,14 +95,14 @@ ls -lah
 pwd
 
 # Custom init
-cp ./init0.sh ./rootfs/sbin/init
-cp ./init1.py ./rootfs/root/init1.py
+cp /app/runtime/init0.sh ./rootfs/sbin/init
+cp /app/runtime/init1.py ./rootfs/root/init1.py
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
 
 tar xvzf ./$FILE_NAME -C ./rootfs/
 
-cp docker-compose.yml ./rootfs/opt/docker-compose.yml
+cp /app/runtime/docker-compose.yml ./rootfs/opt/docker-compose.yml
 
 mksquashfs ./rootfs/ $OUTPUT_PATH
 
