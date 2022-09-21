@@ -90,19 +90,15 @@ rm -fr ./rootfs/usr/share/doc
 rm -fr ./rootfs/usr/share/man
 rm -fr ./rootfs/var/lib/apt/lists/
 
-ls -lah
-
-pwd
-
 # Custom init
 cp /app/runtime/init0.sh ./rootfs/sbin/init
 cp /app/runtime/init1.py ./rootfs/root/init1.py
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
 
-tar xvzf /tmp/aleph-framework-var-lib-docker.tar.gz -C ./rootfs/
+tar xvzf ./aleph-framework-var-lib-docker.tar.gz -C ./rootfs/
 
 cp /app/runtime/docker-compose.yml ./rootfs/opt/docker-compose.yml
 
-mksquashfs ./rootfs/ /tmp/rootfs.squashfs
+mksquashfs ./rootfs/ ./rootfs.squashfs
 
