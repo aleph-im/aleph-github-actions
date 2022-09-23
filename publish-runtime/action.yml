@@ -1,0 +1,23 @@
+# action.yml
+name: 'Publish runtime to Aleph'
+description: 'Publish runtime to Aleph ecosystem'
+inputs:
+  fs_path:
+    description: 'Path to find the root filesystem'
+    required: false
+    default: './rootfs.squashfs'
+  private_key:
+    description: 'Private key to use in Aleph client'
+    required: true
+    default: 'XXXXXXX'
+  runtime_hash:
+    description: 'Runtime hash to pin and to use'
+    required: true
+    default: 'XXXXXXX'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.fs_path }}
+    - ${{ inputs.private_key }}
+    - ${{ inputs.runtime_hash }}
