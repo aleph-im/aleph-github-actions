@@ -14,6 +14,10 @@ inputs:
     description: 'Runtime hash to pin and to use'
     required: true
     default: 'XXXXXXX'
+  indexer:
+    description: 'Indexer to deploy to Aleph'
+    required: true
+    default: 'spl-lending'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -21,3 +25,4 @@ runs:
     - ${{ inputs.fs_path }}
     - ${{ inputs.private_key }}
     - ${{ inputs.runtime_hash }}
+    - ${{ inputs.indexer }}

@@ -20,7 +20,7 @@ services:
 
     network_mode: host
 
-  port-indexer:
+  indexer:
     image: aleph-framework:latest
     volumes:
       - ~/indexer.data:/app/data:rw
@@ -31,9 +31,6 @@ services:
     environment:
       - INDEXER=${INDEXER:-spl-lending}
       - LENDING_ID=${LENDING_ID:-port}
-      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST:-port.api.aleph.cloud}
-      - VIRTUAL_HOST=${VIRTUAL_HOST:-port.api.aleph.cloud}
-      - VIRTUAL_PORT=${VIRTUAL_PORT:-8080}
       - SOLANA_RPC=${SOLANA_RPC:-http://solrpc1.aleph.cloud:7725/}
       # - INDEXER_TCP_PORT=7900
       # ports:
