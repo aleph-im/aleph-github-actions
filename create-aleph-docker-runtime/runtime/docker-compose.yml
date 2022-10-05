@@ -1,27 +1,8 @@
 version: '2'
 
 services:
-  framework:
-    image: aleph-framework:latest
-    container_name: framework-fetcher-parser
-    volumes:
-      - ~/indexer.data:/app/data:rw
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    ports:
-      - "8081:8081"
-    environment:
-      - INDEXER=framework
-      - INDEXER_FRAMEWORK_API_PORT=8081
-      - INDEXER_FRAMEWORK_SERVICES=fetcher parser
-      - INDEXER_FRAMEWORK_INSTANCES=1
-      - INDEXER_FRAMEWORK_NAMESPACE=global
-      - INDEXER_FRAMEWORK_TRANSPORT=LocalNet
-
-    network_mode: host
-
   indexer:
-    image: aleph-framework:latest
+    image: indexer-framework:latest
     volumes:
       - ~/indexer.data:/app/data:rw
     extra_hosts:
