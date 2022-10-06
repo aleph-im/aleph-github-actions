@@ -10,9 +10,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - INDEXER=${INDEXER:-spl-lending}
-      - LENDING_ID=${LENDING_ID:-port}
-      - SOLANA_RPC=${SOLANA_RPC:-http://solrpc1.aleph.cloud:7725/}
+      - INDEXER=${INDEXER}
+      - LENDING_ID=${LENDING_ID}
+      - SOLANA_RPC=${SOLANA_RPC}
       # - INDEXER_TCP_PORT=7900
       # ports:
       #   - 7900:7900
