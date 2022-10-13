@@ -4,7 +4,7 @@ services:
   indexer:
     image: indexer-framework:latest
     volumes:
-      - /opt/indexer.data:/opt/data:rw
+      - /opt/indexer.data:/app/data:rw
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
@@ -13,7 +13,7 @@ services:
       - INDEXER=${INDEXER}
       - LENDING_ID=${LENDING_ID}
       - SOLANA_RPC=${SOLANA_RPC}
-      - INDEXER_DATA_PATH=
+      - INDEXER_DATA_PATH=${INDEXER_DATA_PATH}
       # - INDEXER_TCP_PORT=7900
       # ports:
       #   - 7900:7900
