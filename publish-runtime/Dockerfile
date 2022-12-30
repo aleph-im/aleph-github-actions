@@ -1,32 +1,28 @@
-FROM python:3-bullseye
+FROM python:3.10.6-bullseye
 
-ARG FS_PATH
 ARG PRIVATE_KEY
-ARG RUNTIME_HASH
-ARG INDEXER
-
+ARG RUNTIME_FILENAME
 ENV PRIVATE_KEY=$PRIVATE_KEY
-ENV RUNTIME_HASH=$RUNTIME_HASH
-ENV INDEXER=$INDEXER
+ENV RUNTIME_FILENAME=$RUNTIME_FILENAME
 
 RUN apt-get update
 
 # Install secp256k1
-RUN apt-get install -y libsecp256k1-dev
+RUN apt-get install -y libsecp256k1-dev squashfs-tools
 
-# Temporarily run the beta client with the persistent feature working
-#RUN pip install aleph-client
-RUN pip install 'git+https://github.com/aleph-im/aleph-client@hoh-durable-vms'
+RUN pip install aioipfs
+RUN pip install aleph_client
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh ./entrypoint.sh
+COPY publish.py ./publish.py
 
 COPY program ./program
 
+# Copy runtime file
+COPY $RUNTIME_FILENAME ./$RUNTIME_FILENAME
+
 RUN chmod +x ./program/run.sh
 
-# Copy rootfs.squashfs file
-#COPY $FS_PATH ./rootfs.squashfs
+RUN chmod +x ./entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
