@@ -16,7 +16,7 @@ RUN pip install aleph_client
 COPY entrypoint.sh /app/runtime/entrypoint.sh
 COPY publish.py /app/runtime/publish.py
 
-COPY program /app/runtime
+COPY program /app/runtime/program
 
 # Copy runtime file
 # COPY $RUNTIME_FILENAME /app/runtime/$RUNTIME_FILENAME
