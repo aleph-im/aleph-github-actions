@@ -13,16 +13,16 @@ RUN apt-get install -y libsecp256k1-dev squashfs-tools
 RUN pip install aioipfs
 RUN pip install aleph_client
 
-COPY entrypoint.sh ./entrypoint.sh
-COPY publish.py ./publish.py
+COPY entrypoint.sh /app/runtime/entrypoint.sh
+COPY publish.py /app/runtime/publish.py
 
-COPY program ./program
+COPY program /app/runtime
 
 # Copy runtime file
-COPY $RUNTIME_FILENAME ./$RUNTIME_FILENAME
+COPY $RUNTIME_FILENAME /app/runtime/$RUNTIME_FILENAME
 
-RUN chmod +x ./program/run.sh
+RUN chmod +x /app/runtime/program/run.sh
 
-RUN chmod +x ./entrypoint.sh
+RUN chmod +x /app/runtime/entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/app/runtime/entrypoint.sh"]
