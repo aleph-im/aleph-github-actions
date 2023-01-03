@@ -19,7 +19,7 @@ COPY publish.py /app/runtime/publish.py
 COPY program /app/runtime
 
 # Copy runtime file
-COPY $RUNTIME_FILENAME /app/runtime/$RUNTIME_FILENAME
+# COPY $RUNTIME_FILENAME /app/runtime/$RUNTIME_FILENAME
 
 RUN chmod +x /app/runtime/program/run.sh
 
