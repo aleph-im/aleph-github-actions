@@ -1,7 +1,5 @@
 #!/bin/sh
 
-env
-
-python3 /app/runtime/publish.py $RUNTIME_FILENAME $PRIVATE_KEY
+python3 /app/runtime/publish.py $INPUT_RUNTIME_FILENAME $INPUT_PRIVATE_KEY
 
 
