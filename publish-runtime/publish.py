@@ -107,6 +107,7 @@ def pin_runtime(
 
 
 def main():
+    print(sys.argv)
     if len(sys.argv) < 3:
         print("{0} <RUNTIME_FILENAME> <PRIVATE_KEY>".format(sys.argv[0]))
         return
