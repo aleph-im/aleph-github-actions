@@ -2,27 +2,17 @@
 name: 'Publish runtime to Aleph'
 description: 'Publish runtime to Aleph ecosystem'
 inputs:
-  fs_path:
-    description: 'Path to find the root filesystem'
-    required: false
-    default: './rootfs.squashfs'
   private_key:
     description: 'Private key to use in Aleph client'
     required: true
     default: 'XXXXXXX'
-  runtime_hash:
-    description: 'Runtime hash to pin and to use'
+  runtime_filename:
+    description: 'Runtime filename to publish, pin and use'
     required: true
-    default: 'XXXXXXX'
-  indexer:
-    description: 'Indexer to deploy to Aleph'
-    required: true
-    default: 'spl-lending'
+    default: 'rootfs.squashfs'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.fs_path }}
+    - ${{ inputs.runtime_filename }}
     - ${{ inputs.private_key }}
-    - ${{ inputs.runtime_hash }}
-    - ${{ inputs.indexer }}

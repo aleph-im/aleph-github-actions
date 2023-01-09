@@ -12,10 +12,13 @@ services:
     environment:
       - INDEXER=${INDEXER}
       - LENDING_ID=${LENDING_ID}
+      - SPL_TOKEN_MINTS=${SPL_TOKEN_MINTS}
+      - SPL_TOKEN_ACCOUNTS=${SPL_TOKEN_ACCOUNTS}
       - SOLANA_RPC=${SOLANA_RPC}
       - INDEXER_DATA_PATH=${INDEXER_DATA_PATH}
+      - INDEXER_INSTANCES=${INDEXER_INSTANCES}
       # - INDEXER_TCP_PORT=7900
       # ports:
       #   - 7900:7900
       #   - 7901:7901
-    network_mode: host
+    network_mode: bridge
