@@ -138,7 +138,7 @@ def main():
         result = create_program(
             account=account,
             program_ref=program_ref,
-            entrypoint="main:app",
+            entrypoint="run.sh",
             runtime=runtime_ref,
             storage_engine=StorageEnum.storage,
             channel=settings.DEFAULT_CHANNEL,
