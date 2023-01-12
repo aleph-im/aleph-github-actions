@@ -1,0 +1,75 @@
+name: Pin using Aleph.im
+
+jobs:
+  upload:
+    runs-on: ubuntu-22.04
+    needs: [build]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.assets_path }}
+
+      - name: Install dependencies
+        run: npm i aleph-sdk-ts@3.2.1 ipfs@0.65.0 ws@8.11.0 --no-save
+
+      - name: Upload the build on an IPFS node
+        id: aleph
+        env:
+          ALEPH_ACCOUNT_PRIVATE_KEY: ${{ inputs.account_private_key }}
+          ALEPH_ACCOUNT_MNEMONIC: ${{ inputs.account_mnemonic }}
+          ALEPH_BLOCKCHAIN: ${{ inputs.blockchain }}
+          ALEPH_ASSETS_PATH: ${{ inputs.assets_path }}
+          ALEPH_GLOB_PATTERN: ${{ inputs.glob_pattern }}
+          ALEPH_CHANNEL: ${{ inputs.message_channel }}
+        run: |
+          export $(node ./scripts/deploy.js)
+          echo "file_cid=$OUT_FILE_CID" >> $GITHUB_OUTPUT
+          echo "file_url=$OUT_FILE_URL" >> $GITHUB_OUTPUT
+          echo "message_hash=$OUT_MESSAGE_HASH" >> $GITHUB_OUTPUT
+          echo "explorer_url=$OUT_EXPLORER_URL" >> $GITHUB_OUTPUT
+
+    inputs:
+      account_mnemonic:
+        description: "A supported blockchain account mnemonic"
+        required: false
+
+      account_private_key:
+        description: "A supported blockchain account private key"
+        required: false
+
+      blockchain:
+        description: "Which blockchain should the message be broadcasted on?"
+        required: false
+        default: "ethereum"
+
+      assets_path:
+        description: "The path to the static assets to pin"
+        required: false
+        default: "./dist"
+
+      artifact_name:
+        description: "The name of the static assets artifact"
+        required: false
+        default: "artifact"
+
+      glob_pattern:
+        description: "The glob pattern to add files from the assets directory into the IPFS instance"
+        required: false
+        default: "**/*"
+
+      message_channel:
+        description: "The channel that the aleph STORE message will use"
+        required: false
+        default: "GH-ACTION"
+
+    outputs:
+      file_cid: ${{ $steps.aleph.outputs.file_cid }}
+      file_url: ${{ $steps.aleph.outputs.file_url }}
+      message_hash: ${{ $steps.aleph.outputs.message_hash }}
+      explorer_url: ${{ $steps.aleph.outputs.explorer_url }}
