@@ -3,7 +3,6 @@ name: Test Publish Static
 on:
   pull_request:
     branches: [main]
-    paths: "publish-static/**"
 
 jobs:
   test:
