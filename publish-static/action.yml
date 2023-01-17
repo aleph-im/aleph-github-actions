@@ -3,7 +3,6 @@ name: Pin using Aleph.im
 jobs:
   upload:
     runs-on: ubuntu-22.04
-    needs: [build]
 
     steps:
       - name: Checkout
