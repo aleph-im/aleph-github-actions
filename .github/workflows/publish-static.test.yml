@@ -12,8 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Display execution path
-        run: pwd
+      - name: Generate random bytes
+        run: node publish-static/tests/e2e/generateRandomBytes.js
 
       - name: Display execution files
         run: ls
