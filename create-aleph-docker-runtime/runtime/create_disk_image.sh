@@ -98,7 +98,5 @@ chmod +x ./rootfs/root/init1.py
 
 tar xzf ./aleph-framework-var-lib-docker.tar.gz -C ./rootfs/
 
-cp /app/runtime/docker-compose.yml ./rootfs/opt/docker-compose.yml
-
 mksquashfs ./rootfs/ ./rootfs.squashfs
 

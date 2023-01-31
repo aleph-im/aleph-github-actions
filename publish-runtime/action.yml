@@ -10,9 +10,19 @@ inputs:
     description: 'Runtime filename to publish, pin and use'
     required: true
     default: 'rootfs.squashfs'
+  docker_compose_url:
+    description: 'Url of the docker-compose.yml file to use for the image'
+    required: false
+    default: ''
+  env_url:
+    description: 'Url of the .env file to use for the image'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.runtime_filename }}
     - ${{ inputs.private_key }}
+    - ${{ inputs.docker_compose_url }}
+    - ${{ inputs.env_url }}

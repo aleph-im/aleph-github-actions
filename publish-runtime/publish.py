@@ -10,7 +10,7 @@ import asyncio
 import json
 import logging
 import os
-
+from base64 import b32encode, b16decode
 from aleph_client.__main__ import _load_account
 from aleph_client.conf import settings
 from aleph_client.synchronous import create_program, create_store
@@ -19,7 +19,7 @@ from aleph_client.asynchronous import (
     StorageEnum as ASYNCStorageEnum,
 )
 from aleph_client.types import StorageEnum, AccountFromPrivateKey
-from aleph_message.models.program import Encoding
+from aleph_message.models.program import Encoding, VolumePersistence, PersistentVolume
 
 from pathlib import Path
 from typing import NewType
@@ -126,14 +126,15 @@ def main():
         assert os.path.isfile(program_squashfs_path)
         program_ref = upload_program(account, program_squashfs_path)
 
-        volumes = [
-            {
-                "comment": "Indexer Data",
-                "mount": "/opt/indexer.data",
-                "ref": "",
-                "use_latest": True,
-            }
-        ]
+        persistent_volume = PersistentVolume(
+            persistence = VolumePersistence.host,
+            name = "indexer_data",
+            size_mib = 1000,
+            comment = "Indexer Data",
+            mount = "/opt/indexer.data",
+        )
+
+        volumes = [persistent_volume]
 
         result = create_program(
             account=account,
@@ -142,17 +143,27 @@ def main():
             runtime=runtime_ref,
             storage_engine=StorageEnum.storage,
             channel=settings.DEFAULT_CHANNEL,
-            address=None,
-            session=None,
-            api_server=settings.API_HOST,
-            memory=4000,
+            memory=4_000,
             vcpus=4,
-            timeout_seconds=180,
+            timeout_seconds=settings.DEFAULT_VM_TIMEOUT,
+            persistent=True,
             encoding=Encoding.squashfs,
             volumes=volumes,
         )
         print(f"{result.json(indent=2)}")
         print("Program creation finished\n")
+
+        hash: str = result.item_hash.__str__()
+        hash_base32 = b32encode(b16decode(hash.upper())).strip(b"=").lower().decode()
+
+        print(
+            f"Your program has been uploaded on Aleph .\n\n"
+            "Available on:\n"
+            f"  {settings.VM_URL_PATH.format(hash=hash)}\n"
+            f"  {settings.VM_URL_HOST.format(hash_base32=hash_base32)}\n"
+            "Visualise on:\n  https://explorer.aleph.im/address/"
+            f"{result.chain.__str__()}/{result.sender.__str__()}/message/PROGRAM/{hash}\n"
+        )
     finally:
         # Prevent aiohttp unclosed connector warning
         asyncio.run(get_fallback_session().close())
