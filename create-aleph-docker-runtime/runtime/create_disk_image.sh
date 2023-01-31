@@ -28,8 +28,6 @@ apt-get install -y --no-install-recommends --no-install-suggests \
   docker.io docker-compose \
   cgroupfs-mount nftables
 
-update-alternatives --set iptables /usr/sbin/iptables-legacy
-
 pip3 install 'fastapi~=0.71.0'
 
 echo "Pip installing aleph-client"

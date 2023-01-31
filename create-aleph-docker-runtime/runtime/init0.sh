@@ -29,6 +29,11 @@ mount -t tmpfs run /run -o mode=0755,nosuid,nodev
 mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
 mount -t tmpfs shm /dev/shm -omode=1777,nosuid,nodev
 
+# Required by Docker
+cgroupfs-mount
+update-alternatives --set iptables /usr/sbin/iptables-legacy
+update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
 # List block devices
 lsblk
 
@@ -42,8 +47,6 @@ log "SSH UP"
 log "Setup socat"
 socat UNIX-LISTEN:/tmp/socat-socket,fork,reuseaddr VSOCK-CONNECT:2:53 &
 log "Socat ready"
-
-cgroupfs-mount
 
 export PATH=$PATH:/usr/local/bin:/usr/bin:/usr/sbin
 
