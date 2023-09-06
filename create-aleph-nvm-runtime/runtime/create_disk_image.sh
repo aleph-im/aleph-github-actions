@@ -95,5 +95,4 @@ cp /app/runtime/init1.py ./rootfs/root/init1.py
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
 
-mksquashfs ./rootfs/ ./rootfs.squashfs
-
+mksquashfs ./rootfs/ /tmp/rootfs.squashfs

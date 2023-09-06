@@ -362,7 +362,6 @@ def setup_system(config: ConfigurationPayload):
     setup_variables(config.variables)
     setup_volumes(config.volumes)
     setup_network(config.ip, config.route, config.dns_servers)
-    setup_nvm(config.volumes)
     setup_input_data(config.input_data)
     logger.debug("Setup finished")
 
