@@ -105,9 +105,6 @@ def setup_variables(variables: Optional[Dict[str, str]]):
     for key, value in variables.items():
         os.environ[key] = value
 
-def setup_network():
-    
-
 def setup_network(
     ip: Optional[str], route: Optional[str], dns_servers: Optional[List[str]] = None
 ):
@@ -205,8 +202,8 @@ def setup_nvmrc_version():
     path = f"/opt/code/.nvmrc"
 
     if os.path.isfile(path):
-        os.system(f"nvm install $(cat {path})")
-        os.system(f"nvm use $(cat {path})")
+        os.system(f"/bin/bash nvm install $(cat {path})")
+        os.system(f"/bin/bash nvm use $(cat {path})")
 
 def setup_code(
     code: bytes, encoding: Encoding, entrypoint: str, interface: Interface

@@ -35,11 +35,7 @@ pip3 install 'aleph-client>=0.4.6' 'coincurve==15.0.0'
 python3 -m compileall -f /usr/local/lib/python3.9
 
 # install nvm
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-. /root/.bashrc 
-nvm install --lts
-nvm alias default --lts
-nvm use --lts
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 
 echo "root:toor" | /usr/sbin/chpasswd
 
@@ -48,6 +44,14 @@ mkdir -p /overlay
 # Set up a login terminal on the serial console (ttyS0):
 ln -s agetty /etc/init.d/agetty.ttyS0
 echo ttyS0 > /etc/securetty
+EOT
+
+chroot ./rootfs /bin/bash <<EOT
+. /root/.bashrc
+nvm install --lts
+nvm use --lts
+node -v
+npm -v
 EOT
 
 echo "PermitRootLogin yes" >> ./rootfs/etc/ssh/sshd_config
