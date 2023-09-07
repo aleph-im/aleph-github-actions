@@ -45,5 +45,10 @@ log "Socat ready"
 
 export PATH=$PATH:/usr/local/bin:/usr/bin:/usr/sbin
 
+# Make nvm available on PATH
+set +u
+. /root/.nvm/nvm.sh
+set -u
+
 # Replace this script with the manager
 exec /root/init1.py

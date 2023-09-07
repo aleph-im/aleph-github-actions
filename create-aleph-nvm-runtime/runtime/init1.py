@@ -105,6 +105,7 @@ def setup_variables(variables: Optional[Dict[str, str]]):
     for key, value in variables.items():
         os.environ[key] = value
 
+
 def setup_network(
     ip: Optional[str], route: Optional[str], dns_servers: Optional[List[str]] = None
 ):
@@ -164,6 +165,45 @@ def setup_volumes(volumes: List[Volume]):
 
     system("mount")
 
+
+def setup_code_asgi(
+    code: bytes, encoding: Encoding, entrypoint: str
+) -> ASGIApplication:
+    # Allow importing packages from /opt/packages
+    sys.path.append("/opt/packages")
+
+    logger.debug("Extracting code")
+    if encoding == Encoding.squashfs:
+        sys.path.append("/opt/code")
+        module_name, app_name = entrypoint.split(":", 1)
+        logger.debug("import module")
+        module = __import__(module_name)
+        for level in module_name.split(".")[1:]:
+            module = getattr(module, level)
+        app: ASGIApplication = getattr(module, app_name)
+    elif encoding == Encoding.zip:
+        # Unzip in /opt and import the entrypoint from there
+        if not os.path.exists("/opt/archive.zip"):
+            open("/opt/archive.zip", "wb").write(code)
+            logger.debug("Run unzip")
+            os.system("unzip -q /opt/archive.zip -d /opt")
+        sys.path.append("/opt")
+        module_name, app_name = entrypoint.split(":", 1)
+        logger.debug("import module")
+        module = __import__(module_name)
+        for level in module_name.split(".")[1:]:
+            module = getattr(module, level)
+        app: ASGIApplication = getattr(module, app_name)
+    elif encoding == Encoding.plain:
+        # Execute the code and extract the entrypoint
+        locals: Dict[str, Any] = {}
+        exec(code, globals(), locals)
+        app: ASGIApplication = locals[entrypoint]
+    else:
+        raise ValueError(f"Unknown encoding '{encoding}'")
+    return app
+
+
 def setup_code_executable(
     code: bytes, encoding: Encoding, entrypoint: str
 ) -> subprocess.Popen:
@@ -192,11 +232,14 @@ def setup_code_executable(
     else:
         raise ValueError(f"Unknown encoding '{encoding}'. This should never happen.")
 
+    setup_nvmrc_version()
+    
     stdout = open("log_stdout.txt", "w")
     stderr = open("log_stderr.txt", "w")
     process = subprocess.run(path, stdout=stdout, stderr=stderr, shell=True)
 
     return process
+
 
 def setup_nvmrc_version():
     path = f"/opt/code/.nvmrc"
@@ -205,18 +248,79 @@ def setup_nvmrc_version():
         os.system(f"/bin/bash nvm install $(cat {path})")
         os.system(f"/bin/bash nvm use $(cat {path})")
 
+
 def setup_code(
     code: bytes, encoding: Encoding, entrypoint: str, interface: Interface
 ) -> Union[ASGIApplication, subprocess.Popen]:
 
-    if interface == Interface.executable:
+    if interface == Interface.asgi:
+        return setup_code_asgi(code=code, encoding=encoding, entrypoint=entrypoint)
+    elif interface == Interface.executable:
         return setup_code_executable(
             code=code, encoding=encoding, entrypoint=entrypoint
         )
     else:
         raise ValueError("Invalid interface. This should never happen.")
 
-    setup_nvmrc_version()
+
+
+async def run_python_code_http(
+    application: ASGIApplication, scope: dict
+) -> Tuple[Dict, Dict, str, Optional[bytes]]:
+
+    logger.debug("Running code")
+    with StringIO() as buf, redirect_stdout(buf):
+        # Execute in the same process, saves ~20ms than a subprocess
+
+        # The body should not be part of the ASGI scope itself
+        body: bytes = scope.pop("body")
+
+        async def receive():
+            type_ = (
+                "http.request"
+                if scope["type"] in ("http", "websocket")
+                else "aleph.message"
+            )
+            return {"type": type_, "body": body, "more_body": False}
+
+        send_queue: asyncio.Queue = asyncio.Queue()
+
+        async def send(dico):
+            await send_queue.put(dico)
+
+        # TODO: Better error handling
+        logger.debug("Awaiting application...")
+        await application(scope, receive, send)
+
+        logger.debug("Waiting for headers")
+        headers: Dict
+        if scope["type"] == "http":
+            headers = await send_queue.get()
+        else:
+            headers = {}
+
+        logger.debug("Waiting for body")
+        body: Dict = await send_queue.get()
+
+        logger.debug("Waiting for buffer")
+        output = buf.getvalue()
+
+        logger.debug(f"Headers {headers}")
+        logger.debug(f"Body {body}")
+        logger.debug(f"Output {output}")
+
+    logger.debug("Getting output data")
+    output_data: bytes
+    if os.path.isdir("/data") and os.listdir("/data"):
+        make_archive("/opt/output", "zip", "/data")
+        with open("/opt/output.zip", "rb") as output_zipfile:
+            output_data = output_zipfile.read()
+    else:
+        output_data = b""
+
+    logger.debug("Returning result")
+    return headers, body, output, output_data
+
 
 async def make_request(session, scope):
     async with session.request(
@@ -307,7 +411,11 @@ async def process_instruction(
             body: Dict
             output_data: Optional[bytes]
 
-            if interface == Interface.executable:
+            if interface == Interface.asgi:
+                headers, body, output, output_data = await run_python_code_http(
+                    application=application, scope=payload.scope
+                )
+            elif interface == Interface.executable:
                 headers, body, output, output_data = await run_executable_http(
                     scope=payload.scope
                 )
