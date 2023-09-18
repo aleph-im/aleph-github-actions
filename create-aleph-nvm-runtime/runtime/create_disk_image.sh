@@ -92,7 +92,11 @@ rm -fr ./rootfs/var/lib/apt/lists/
 # Custom init
 cp /app/runtime/init0.sh ./rootfs/sbin/init
 cp /app/runtime/init1.py ./rootfs/root/init1.py
+cp /app/runtime/run.sh ./rootfs/root/run.sh
+
 chmod +x ./rootfs/sbin/init
 chmod +x ./rootfs/root/init1.py
+chmod +x ./rootfs/root/run.sh
 
+# cp -r ./rootfs/ /tmp/rootfs
 mksquashfs ./rootfs/ /tmp/rootfs.squashfs

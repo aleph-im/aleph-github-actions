@@ -231,23 +231,13 @@ def setup_code_executable(
         os.system(f"chmod +x {path}")
     else:
         raise ValueError(f"Unknown encoding '{encoding}'. This should never happen.")
-
-    setup_nvmrc_version()
     
     stdout = open("log_stdout.txt", "w")
     stderr = open("log_stderr.txt", "w")
-    process = subprocess.run(path, stdout=stdout, stderr=stderr, shell=True)
+    
+    process = subprocess.run(["/root/run.sh", path], stdout=stdout, stderr=stderr, shell=True)
 
     return process
-
-
-def setup_nvmrc_version():
-    path = f"/opt/code/.nvmrc"
-
-    if os.path.isfile(path):
-        os.system(f"/bin/bash nvm install $(cat {path})")
-        os.system(f"/bin/bash nvm use $(cat {path})")
-
 
 def setup_code(
     code: bytes, encoding: Encoding, entrypoint: str, interface: Interface
