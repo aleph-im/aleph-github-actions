@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 NVM=/root/.nvm/nvm.sh
 NVMRC=/opt/code/.nvmrc

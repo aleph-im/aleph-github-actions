@@ -235,7 +235,8 @@ def setup_code_executable(
     stdout = open("log_stdout.txt", "w")
     stderr = open("log_stderr.txt", "w")
     
-    process = subprocess.run(["/root/run.sh", path], stdout=stdout, stderr=stderr, shell=True)
+    # note: https://medium.com/python-pandemonium/a-trap-of-shell-true-in-the-subprocess-module-6db7fc66cdfd
+    process = subprocess.run(f"/root/run.sh {path}", stdout=stdout, stderr=stderr, shell=True)
 
     return process
 
