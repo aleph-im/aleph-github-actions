@@ -46,6 +46,13 @@ ln -s agetty /etc/init.d/agetty.ttyS0
 echo ttyS0 > /etc/securetty
 EOT
 
+cat <<EOT > ./rootfs/etc/hosts
+127.0.0.1  localhost
+::1    localhost ip6-localhost ip6-loopback
+ff02::1    ip6-allnodes
+ff02::2    ip6-allrouters
+EOT
+
 # In case we want to pre-install the latest lts version
 # chroot ./rootfs /bin/bash <<EOT
 # . /root/.bashrc
