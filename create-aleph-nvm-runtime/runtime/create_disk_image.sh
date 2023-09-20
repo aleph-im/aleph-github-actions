@@ -53,14 +53,14 @@ ff02::1    ip6-allnodes
 ff02::2    ip6-allrouters
 EOT
 
-# In case we want to pre-install the latest lts version
-# chroot ./rootfs /bin/bash <<EOT
-# . /root/.bashrc
-# nvm install --lts
-# nvm use --lts
-# node -v
-# npm -v
-# EOT
+# In case we want to pre-install the latest lts version (v18.18.0)
+chroot ./rootfs /bin/bash <<EOT
+. /root/.bashrc
+nvm install v18.18.0
+nvm use v18.18.0
+node -v
+npm -v
+EOT
 
 echo "PermitRootLogin yes" >> ./rootfs/etc/ssh/sshd_config
 

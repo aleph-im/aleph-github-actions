@@ -4,7 +4,7 @@ cd /opt/code
 
 NVM=/root/.nvm/nvm.sh
 NVMRC=/opt/code/.nvmrc
-VERSION=--lts
+VERSION=v18.18.0
 
 if [[ -f "$NVM" ]]; then
   . $NVM
