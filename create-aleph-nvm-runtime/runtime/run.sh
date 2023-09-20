@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd /opt/code
+
 NVM=/root/.nvm/nvm.sh
 NVMRC=/opt/code/.nvmrc
 VERSION=--lts
