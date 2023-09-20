@@ -46,13 +46,14 @@ ln -s agetty /etc/init.d/agetty.ttyS0
 echo ttyS0 > /etc/securetty
 EOT
 
-chroot ./rootfs /bin/bash <<EOT
-. /root/.bashrc
-nvm install --lts
-nvm use --lts
-node -v
-npm -v
-EOT
+# In case we want to pre-install the latest lts version
+# chroot ./rootfs /bin/bash <<EOT
+# . /root/.bashrc
+# nvm install --lts
+# nvm use --lts
+# node -v
+# npm -v
+# EOT
 
 echo "PermitRootLogin yes" >> ./rootfs/etc/ssh/sshd_config
 
