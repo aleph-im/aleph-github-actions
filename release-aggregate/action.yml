@@ -1,0 +1,35 @@
+name: Publish Release Aggregate
+description: Publish an aggregate message on the aleph network
+
+inputs:
+  ipfs_cid:
+    description: "IPFS CID of the static website"
+    required: true
+  mnemonic:
+    description: "A valid ethereum mnemonic"
+    required: true
+  app_name:
+    description: "App name to deploy to"
+    required: true
+
+jobs:
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "18.x"
+
+    - name: Install Dependencies
+      run: npm i aleph-sdk-ts
+
+    - name: Publish
+      env:
+        IPFS_CID: ${{ inputs.ipfs_cid }}
+        ALEPH_ACCOUNT_MNEMONIC: ${{ inputs.mnemonic }}
+        APP_NAME: ${{ inputs.app_name }}
+      run: node publish.mjs
