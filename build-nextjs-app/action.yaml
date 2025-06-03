@@ -6,6 +6,10 @@ inputs:
     description: 'Node.js version'
     required: false
     default: 18
+  fa-token:
+    description: 'FontAwesome NPM Auth Token (optional)'
+    required: false
+    default: ''
   export:
     description: 'Whether to export the app as a static site or not'
     required: false
@@ -22,6 +26,8 @@ runs:
 
     - name: Install dependencies
       shell: bash
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ inputs.fa-token }}
       run: npm ci
 
     - name: Cache
