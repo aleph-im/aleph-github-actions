@@ -1,0 +1,23 @@
+name: Push to IPFS
+description: Push directory to IPFS
+
+inputs:
+  upload-dir:
+    description: 'Directory to upload'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Push to IPFS
+      id: push_to_ipfs
+      shell: bash
+      run: |
+        pip install 'aioipfs>=0.6.2'
+        CID=$(python3 ${{ github.action_path }}/scripts/push_on_ipfs.py "${{ inputs.upload-dir }}")
+        echo "CID: $CID" >> $GITHUB_STEP_SUMMARY
+        echo "cid=$CID" >> $GITHUB_OUTPUT
+outputs:
+  cid:
+    description: 'IPFS CID'
+    value: ${{ steps.push_to_ipfs.outputs.cid }}

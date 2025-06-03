@@ -1,0 +1,46 @@
+name: Build
+description: Build and export Next.js app
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: 18
+  fa-token:
+    description: 'FontAwesome NPM Auth Token (optional)'
+    required: false
+    default: ''
+  export:
+    description: 'Whether to export the app as a static site or not'
+    required: false
+    default: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+
+    - name: Install dependencies
+      shell: bash
+      env:
+        FONTAWESOME_NPM_AUTH_TOKEN: ${{ inputs.fa-token }}
+      run: npm ci
+
+    - name: Cache
+      uses: actions/cache@v4
+      with:
+        path: .next/cache
+        # Generate a new cache whenever packages or next config changes.
+        key: ${{ runner.os }}-next-build-${{ hashFiles('**/package-lock.json','**/next.config.js') }}
+        restore-keys: |
+          ${{ runner.os }}-next-build-
+
+    - name: Build and export
+      shell: bash
+      env:
+        NEXTJS_EXPORT: ${{ inputs.export }}
+      run: npm run build
