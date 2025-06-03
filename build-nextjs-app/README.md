@@ -8,10 +8,6 @@ This action builds and exports a Next.js app
 
 Node.js version
 
-## `fa-token`
-
-FontAwesome NPM Auth Token
-
 ## `export`
 
 Whether to export the app or not
