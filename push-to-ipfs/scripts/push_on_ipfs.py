@@ -9,6 +9,7 @@ Requires: 'aioipfs>=0.6.2'
 
 import asyncio
 import logging
+import sys
 from pathlib import Path
 from typing import NewType
 
@@ -40,8 +41,7 @@ async def upload_site(files: list[Path], multiaddr: Multiaddr) -> CID:
         await client.close()
 
 
-async def publish_site(multiaddr: Multiaddr) -> CID:
-    path = Path(__file__).parent / "../out"
+async def publish_site(path: Path, multiaddr: Multiaddr) -> CID:
     if not path.is_dir():
         raise NotADirectoryError(f"No such directory: {path}")
     cid = await upload_site(files=[path], multiaddr=multiaddr)
@@ -49,7 +49,12 @@ async def publish_site(multiaddr: Multiaddr) -> CID:
 
 
 def main():
-    print(asyncio.run(publish_site(Multiaddr("/dns6/ipfs-2.aleph.im/tcp/443/https"))))
+    if len(sys.argv) != 2:
+        print(f"Usage: {Path(__file__).name} <directory>")
+        sys.exit(1)
+
+    directory = Path(sys.argv[1]).resolve()
+    print(asyncio.run(publish_site(directory, Multiaddr("/dns6/ipfs-2.aleph.im/tcp/443/https"))))
 
 
 if __name__ == "__main__":
