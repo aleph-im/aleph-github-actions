@@ -14,7 +14,7 @@ runs:
       shell: bash
       run: |
         pip install 'aioipfs>=0.6.2'
-        CID=$(python3 ${{ github.action_path }}/scripts/push_on_ipfs.py "${{ inputs.upload-dir }}")
+        CID=$(python3 ${{ github.action_path }}/scripts/push_on_ipfs.py "${{ github.workspace }}/${{ inputs.upload-dir }}")
         echo "CID: $CID" >> $GITHUB_STEP_SUMMARY
         echo "cid=$CID" >> $GITHUB_OUTPUT
 outputs:
