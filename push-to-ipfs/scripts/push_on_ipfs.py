@@ -54,7 +54,7 @@ def main():
         sys.exit(1)
 
     directory = Path(sys.argv[1]).resolve()
-    print(asyncio.run(publish_site(directory, Multiaddr("/dns6/ipfs-2.aleph.im/tcp/443/https"))))
+    print(asyncio.run(publish_site(directory, Multiaddr("/dns/ipfs-2.aleph.im/tcp/443/https"))))
 
 
 if __name__ == "__main__":
