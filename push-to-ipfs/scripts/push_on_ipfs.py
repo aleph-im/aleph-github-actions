@@ -26,7 +26,10 @@ def raise_no_cid():
 
 
 async def upload_site(files: list[Path], multiaddr: Multiaddr) -> CID:
-    client = aioipfs.AsyncIPFS(maddr=multiaddr)
+    client = aioipfs.AsyncIPFS(
+        maddr=multiaddr,
+        read_timeout=900,
+    )
 
     try:
         cid = None
