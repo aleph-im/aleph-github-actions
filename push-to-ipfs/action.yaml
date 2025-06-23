@@ -3,21 +3,36 @@ description: Push directory to IPFS
 
 inputs:
   upload-dir:
-    description: 'Directory to upload'
+    description: "Directory to upload"
     required: true
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        pip install -r ${{ github.action_path }}/scripts/requirements.txt
+      shell: bash
+
     - name: Push to IPFS
       id: push_to_ipfs
       shell: bash
       run: |
-        pip install 'aioipfs>=0.6.2'
-        CID=$(python3 ${{ github.action_path }}/scripts/push_on_ipfs.py "${{ github.workspace }}/${{ inputs.upload-dir }}")
-        echo "CID: $CID" >> $GITHUB_STEP_SUMMARY
-        echo "cid=$CID" >> $GITHUB_OUTPUT
+        result=$(python3 ${{ github.action_path }}/scripts/push_on_ipfs.py "${{ github.workspace }}/${{ inputs.upload-dir }}")
+        echo "CID V0: $(echo $result | jq -r '.cid_v0')" >> $GITHUB_STEP_SUMMARY
+        echo "CID V1: $(echo $result | jq -r '.cid_v1')" >> $GITHUB_STEP_SUMMARY
+        echo "cid_v0=$(echo $result | jq -r '.cid_v0')" >> $GITHUB_OUTPUT
+        echo "cid_v1=$(echo $result | jq -r '.cid_v1')" >> $GITHUB_OUTPUT
+
 outputs:
-  cid:
-    description: 'IPFS CID'
-    value: ${{ steps.push_to_ipfs.outputs.cid }}
+  cid_v0:
+    description: "IPFS CID V0"
+    value: ${{ steps.push_to_ipfs.outputs.cid_v0 }}
+  cid_v1:
+    description: "IPFS CID V0"
+    value: ${{ steps.push_to_ipfs.outputs.cid_v1 }}
