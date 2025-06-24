@@ -24,16 +24,15 @@ def upload_with_requests(folder: Path, gateway: str):
     response = requests.post(url, params=params, files=files)
     response.raise_for_status()
 
-    # Parse the response line-by-line
-    cid_v0 = None
-    for line in response.text.strip().splitlines():
-        entry = json.loads(line)
-        cid_v0 = entry.get("Hash")
+    files = response.text.strip().splitlines()
+    # Previous to last element in list is the uploaded folder
+    cid_v0 = json.loads(files[-2]).get("Hash")
 
     if not cid_v0:
         raise RuntimeError("CID not found in response.")
 
     cid_v1 = make_cid(cid_v0).to_v1().encode("base32").decode()
+
     return {"cid_v0": cid_v0, "cid_v1": cid_v1}
 
 if __name__ == "__main__":
