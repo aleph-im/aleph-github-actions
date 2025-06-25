@@ -1,0 +1,13 @@
+# action.yml
+name: 'Create Aleph NVM Runtime'
+description: 'Create Aleph NVM Runtime'
+inputs:
+  output_path:
+    description: 'Path to save the runtime filesystem'
+    required: false
+    default: '/tmp/rootfs.squashfs'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.output_path }}
